@@ -2,12 +2,27 @@
  * config.js – All tunable simulation parameters in one place.
  */
 
-import { label } from "three/tsl";
-
 // ── Field dimensions (metres, approximate FRC field) ──
 export const FIELD = {
   length: 16.46,   // ~54 ft
   width: 8.23,     // ~27 ft
+};
+
+const ROBOT_BASE = {
+  width: 0.84,
+  depth: 0.84,
+  height: 0.30,
+};
+
+// Robot physics bounding box (metres) – edit these directly
+export const ROBOT_COLLIDER = {
+  // Distances from robot body center to each face
+  front: 0.36,   // toward local -Z
+  back: 0.36,    // toward local +Z
+  left: 0.35,    // toward local -X
+  right: 0.29,   // toward local +X
+  top: 0.40,     // toward local +Y
+  bottom: 0.0,  // toward local -Y
 };
 
 // ── Robot parameters ──
@@ -20,10 +35,14 @@ export const ROBOT = {
   angularDrag: 4.0,        // angular drag coefficient
   mass: 56,                // kg (~125 lbs)
   maxBalls: 10,            // max fuel the robot can hold
-  // Approximate bounding box for physics (metres)
-  width: 0.84,            // ~33 in frame
-  depth: 0.84,
-  height: 0.3,
+  // Uniform proportional scale for robot visual + physics footprint
+  scale: 0.88,
+  // Approximate bounding box for physics (metres), derived from scale
+  get width() { return ROBOT_BASE.width * this.scale; },
+  get depth() { return ROBOT_BASE.depth * this.scale; },
+  get height() { return ROBOT_BASE.height * this.scale; },
+  // Rotate intake/shooter forward reference around Y to match model orientation
+  intakeYawOffsetDeg: 90,
   // Intake zone: forward-facing front of robot (local +Z by convention after alignment)
   intakeReach: 0.6,       // how far in front the intake extends
 };
@@ -34,6 +53,7 @@ export const SHOOTER = {
   launchAngle: 60,        // degrees from horizontal
   launchHeight: 0.6,      // metres above ground the ball exits
   cooldownMs: 100,        // minimum time between shots
+  shooterYawOffsetDeg: -90, // rotate shooter direction relative to intake forward
 };
 
 // ── Fuel (ball) parameters ──
@@ -41,7 +61,7 @@ export const FUEL = {
   radius: 0.12,           // ~5 in diameter ball
   mass: 0.3,              // kg
   pickupRadius: 0.8,      // how close to pick up
-  totalBalls: 20,         // number of balls on the field
+  totalBalls: 50,         // number of balls on the field
   // Spawn area bounds
   spawnArea: {
     xMin: -0.5, xMax: 0.5,
@@ -111,13 +131,15 @@ export const CAMERAS = [
 // ── Physics ──
 export const PHYSICS = {
   gravity: -9.81,
-  fixedTimeStep: 1 / 120,
-  maxSubSteps: 3,
+  fixedTimeStep: 1 / 60,
+  maxSubSteps: 1,
+  useFieldTrimesh: true,
 };
 
 // ── Rendering ──
 export const RENDER = {
-  antialias: true,
-  shadowMapSize: 1024,
-  maxPixelRatio: 2,
+  antialias: false,
+  shadowsEnabled: false,
+  shadowMapSize: 512,
+  maxPixelRatio: 1,
 };

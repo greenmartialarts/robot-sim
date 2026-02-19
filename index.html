@@ -131,6 +131,73 @@
       font-size: 0.85rem;
       color: #3B82F6;
     }
+
+    /* ── Performance panel ── */
+    #perf-panel {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 12;
+      pointer-events: auto;
+      background: rgba(0, 0, 0, 0.78);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 8px;
+      padding: 10px 12px;
+      backdrop-filter: blur(8px);
+      color: #ddd;
+      font-size: 0.72rem;
+      width: 280px;
+    }
+    #perf-panel .title {
+      color: #3B82F6;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    #perf-panel .title button {
+      background: none;
+      border: none;
+      color: #3B82F6;
+      font-size: 0.9rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 2px;
+    }
+    #perf-panel .body {
+      margin-top: 8px;
+    }
+    #perf-panel.collapsed .body {
+      display: none;
+    }
+    #perf-panel.collapsed {
+      width: auto;
+    }
+    #perf-panel .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    #perf-panel label {
+      color: #aaa;
+    }
+    #perf-panel select,
+    #perf-panel input[type="number"] {
+      background: #222;
+      color: #ddd;
+      border: 1px solid #555;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      width: 92px;
+    }
   </style>
 </head>
 <body>
@@ -158,6 +225,64 @@
   <!-- Camera label -->
   <div id="camera-label">Driver Station</div>
 
+  <!-- Performance settings -->
+  <div id="perf-panel">
+    <div class="title" id="perf-title">
+      <span>Performance</span>
+      <button id="perf-toggle" title="Minimize">&#x2212;</button>
+    </div>
+    <div class="body">
+      <div class="row">
+        <label for="perf-preset">Preset</label>
+      <select id="perf-preset">
+        <option value="fast">Fast</option>
+        <option value="balanced">Balanced</option>
+        <option value="quality">Quality</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="perf-pixel-ratio">Pixel Ratio</label>
+      <select id="perf-pixel-ratio">
+        <option value="1">1.0</option>
+        <option value="1.25">1.25</option>
+        <option value="1.5">1.5</option>
+        <option value="2">2.0</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="perf-shadows">Shadows</label>
+      <input id="perf-shadows" type="checkbox" />
+    </div>
+    <div class="row">
+      <label for="perf-hitboxes">Hitboxes</label>
+      <input id="perf-hitboxes" type="checkbox" />
+    </div>
+    <div class="row">
+      <label for="perf-shadow-size">Shadow Map</label>
+      <select id="perf-shadow-size">
+        <option value="512">512</option>
+        <option value="1024">1024</option>
+        <option value="2048">2048</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="perf-physics-hz">Physics Hz</label>
+      <select id="perf-physics-hz">
+        <option value="60">60</option>
+        <option value="120">120</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="perf-substeps">Max Substeps</label>
+      <select id="perf-substeps">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </div>
+  </div>
+  </div>
+
   <!-- Controls help -->
   <div id="controls-help">
     <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move &nbsp;|&nbsp;
@@ -167,6 +292,10 @@
     <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><kbd>5</kbd><kbd>6</kbd><kbd>7</kbd><kbd>8</kbd> Camera &nbsp;|&nbsp;
     <kbd>R</kbd> Reset
   </div>
+
+  <!-- Mini-map frame: Three.js renders the actual 3-D top-down view into the
+       main canvas at this position; this div just provides a styled border. -->
+  <div id="minimap"></div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

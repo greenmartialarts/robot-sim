@@ -85,6 +85,11 @@ export function updateCamera() {
   return CAMERAS[_currentIndex].label;
 }
 
+/** Returns the 0-based index of the active camera (matches CAMERAS array). */
+export function getCurrentCameraIndex() {
+  return _currentIndex;
+}
+
 /* ── Internal helpers ── */
 
 function _setCameraView(idx) {
